@@ -20,7 +20,7 @@
  *    [0, 1, 2, 3, 4, 5], 5    => 5
  */
 function findElement(arr, value) {
-  return arr.findIndex((v) => v === value);
+  return arr.indexOf(value);
 }
 
 /**
@@ -327,8 +327,8 @@ function sortDigitNamesByNumericOrder(arr) {
     'eight',
     'nine',
   ];
-  return arr.sort((digit1, digit2) => numbersArr.findIndex((v) => v === digit1)
-    - numbersArr.findIndex((v) => v === digit2));
+  return arr.sort((digit1, digit2) => numbersArr.indexOf(digit1)
+    - numbersArr.indexOf(digit2));
 }
 
 /**
