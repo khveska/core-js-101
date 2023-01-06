@@ -111,88 +111,86 @@ function fromJSON(proto, json) {
  */
 
 class CssSelectorBuilder {
-  #str;
-
-  #EXPECTED_ORDER = [
-    'element',
-    'id',
-    'class',
-    'attribute',
-    'pseudo-class',
-    'pseudo-element',
-  ];
-
-  #actualOrder = [];
-
   constructor() {
-    this.#str = '';
+    this.str = '';
+    this.EXPECTED_ORDER = [
+      'element',
+      'id',
+      'class',
+      'attribute',
+      'pseudo-class',
+      'pseudo-element',
+    ];
+    this.actualOrder = [];
   }
 
   element(value) {
-    this.#throwErrorIfUniqueMethodsCalledTwice('element');
-    this.#throwErrorIfOrderIsIncorrect('element');
-    this.#str += value;
+    this.throwErrorIfUniqueMethodsCalledTwice('element');
+    this.throwErrorIfOrderIsIncorrect('element');
+    this.str += value;
     return this;
   }
 
   id(value) {
-    this.#throwErrorIfUniqueMethodsCalledTwice('id');
-    this.#throwErrorIfOrderIsIncorrect('id');
-    this.#str += `#${value}`;
+    this.throwErrorIfUniqueMethodsCalledTwice('id');
+    this.throwErrorIfOrderIsIncorrect('id');
+    this.str += `#${value}`;
     return this;
   }
 
   class(value) {
-    this.#throwErrorIfOrderIsIncorrect('class');
-    this.#str += `.${value}`;
+    this.throwErrorIfOrderIsIncorrect('class');
+    this.str += `.${value}`;
     return this;
   }
 
   attr(value) {
-    this.#throwErrorIfOrderIsIncorrect('attribute');
-    this.#str += `[${value}]`;
+    this.throwErrorIfOrderIsIncorrect('attribute');
+    this.str += `[${value}]`;
     return this;
   }
 
   pseudoClass(value) {
-    this.#throwErrorIfOrderIsIncorrect('pseudo-class');
-    this.#str += `:${value}`;
+    this.throwErrorIfOrderIsIncorrect('pseudo-class');
+    this.str += `:${value}`;
     return this;
   }
 
   pseudoElement(value) {
-    this.#throwErrorIfUniqueMethodsCalledTwice('pseudo-element');
-    this.#throwErrorIfOrderIsIncorrect('pseudo-element');
-    this.#str += `::${value}`;
+    this.throwErrorIfUniqueMethodsCalledTwice('pseudo-element');
+    this.throwErrorIfOrderIsIncorrect('pseudo-element');
+    this.str += `::${value}`;
     return this;
   }
 
   combine(selector1, combinator, selector2) {
-    this.#str = `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
+    this.str = `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
     return this;
   }
 
   stringify() {
-    return this.#str;
+    return this.str;
   }
 
-  #throwErrorIfUniqueMethodsCalledTwice(selectorName) {
-    if (this.#actualOrder.indexOf(selectorName) !== -1) {
+  throwErrorIfUniqueMethodsCalledTwice(selectorName) {
+    if (this.actualOrder.indexOf(selectorName) !== -1) {
       throw new Error(
         'Element, id and pseudo-element should not occur more then one time inside the selector',
       );
     }
   }
 
-  #throwErrorIfOrderIsIncorrect(selectorName) {
-    const indexOfLastPart = this.#EXPECTED_ORDER.indexOf(this.#actualOrder.at(-1));
-    const indexOfCurPart = this.#EXPECTED_ORDER.indexOf(selectorName);
+  throwErrorIfOrderIsIncorrect(selectorName) {
+    const indexOfLastPart = this.EXPECTED_ORDER.indexOf(
+      this.actualOrder.at(-1),
+    );
+    const indexOfCurPart = this.EXPECTED_ORDER.indexOf(selectorName);
     if (indexOfCurPart < indexOfLastPart) {
       throw new Error(
         'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element',
       );
     }
-    this.#actualOrder.push(selectorName);
+    this.actualOrder.push(selectorName);
   }
 }
 
